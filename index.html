@@ -1,0 +1,525 @@
+<html>
+<head>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+  <style>
+  body {
+background: #ffffff;
+margin: 0;
+padding: 20px;
+line-height: 1.4em;
+font-family: tahoma, arial, sans-serif;
+font-size: 62.5%;
+}
+
+table {
+width: 80%;
+margin: 0;
+background: #FFFFFF;
+border: 1px solid #333333;
+border-collapse: collapse;
+}
+
+td, th {
+border-bottom: 1px solid #333333;
+padding: 6px 16px;
+text-align: left;
+}
+
+th {
+background: #EEEEEE;
+}
+
+caption {
+background: #E0E0E0;
+margin: 0;
+border: 1px solid #333333;
+border-bottom: none;
+padding: 6px 16px;
+font-weight: bold;
+}
+.button1{
+  background-color: 'black';
+  color : white;
+  padding : 30px 64px;
+  font-size : 24px;
+}
+.vvv{
+	width: 100%;
+	height: 70%;
+	overflow: hidden;
+}
+.logo{
+	height: 52px;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+		color: white;
+		font-size : 52px;
+}
+.table1{
+	overflow:auto
+}
+
+  </style>
+  <script>
+  function Update_Table_MyPlayer(){
+    change_table_MyPlayer();
+    $.ajax({
+  		url: "/customPlayerAPI",
+  		success: function( result ) {
+  			for (var i in result){
+  				var item = result[i];
+          console.log(item);
+  				$('#mytable4 > tbody:last').append('<tr>' +
+          '<td>' + item.player_first_name + '</td>' +
+          '<td>' + item.player_last_name + '</td>' +
+          '<td>' + item.team_name + '</td>' +
+          '<td>' + item.GP + '</td>' +
+          '<td>' + item.MINUTE + '</td>' +
+          '<td>' + item.pts + '</td>' +
+          '<td>' + item.fgm + '</td>' +
+          '<td>' + item.fga + '</td>' +
+          '<td>' + item.tpm + '</td>' +
+          '<td>' + item.tpa + '</td>' +
+          '<td>' + item.tpp + '</td>' +
+          '<td>' + item.ftm + '</td>' +
+          '<td>' + item.fta + '</td>' +
+          '<td>' + item.ftp + '</td>' +
+          '<td>' + item.oreb + '</td>' +
+          '<td>' + item.dreb + '</td>' +
+          '<td>' + item.reb + '</td>' +
+          '<td>' + item.ast + '</td>' +
+          '<td>' + item.stl + '</td>' +
+          '<td>' + item.blk + '</td>' +
+          '<td>' + item.tov + '</td>' +
+          '<td>' + item.dd2 + '</td>' +
+          '<td>' + item.td3 + '</td></tr>');
+  			}
+  		}
+  	});
+  };
+  function Add_Player(FirstName, LastName){
+     console.log(FirstName);
+     console.log(LastName);
+    	$.ajax({
+    		url: "/customPlayerInsert",
+        type: "POST",
+        data: {
+          first: FirstName,
+          last: LastName
+        },
+    		success: function(result){
+          if (result.sendCode == "2"){
+            alert("overlapped input");
+          }
+          else if (result.sendCode == "1"){
+            alert("Wrong Input");
+          }
+          console.log(result);
+          console.log("success");
+          Update_Table_MyPlayer();
+        },
+        error: function(){
+          console.log("error");
+          Update_Table_MyPlayer();
+          alert("Error!");
+        }
+    	});
+  }
+
+  function Delete_Player(FirstName, LastName){
+    console.log(FirstName);
+    console.log(LastName);
+    $.ajax({
+      url: "/customPlayerDelete",
+      type: "POST",
+      data: {
+        first: FirstName,
+        last: LastName
+      },
+      success: function(result){
+        if (result.sendCode == "2"){
+          alert("overlapped input");
+        }
+        else if (result.sendCode == "1"){
+          alert("Wrong Input");
+        }
+        console.log(result);
+        console.log("success");
+        Update_Table_MyPlayer();
+      },
+      error: function(){
+        console.log("error");
+        Update_Table_MyPlayer();
+        alert("Error");
+      }
+    });
+  }
+
+  function change_color(item){
+
+    $(".button1").css('background-color', "black");
+    $(item).css('background-color',  'red');
+  }
+	function change_color1(item){
+
+    $(".w3-bar-item w3-button tablink").css('background-color', "black");
+    $(item).css('background-color',  'red');
+  }
+  function change_table_Team(){
+    document.getElementById('table1').innerHTML =
+    `<table id="mytable" border="1" cellspacing="17">
+    	<tr>
+    		<th>TEAM</th>
+    		<th>GP</th>
+    		<th>W</th>
+        <th>L</th>
+        <th>WIN%</th>
+        <th>MIN</th>
+        <th>PTS</th>
+        <th>FG%</th>
+        <th>3P%</th>
+        <th>FT%</th>
+        <th>OREB</th>
+        <th>DREB</th>
+        <th>REB</th>
+        <th>AST</th>
+        <th>TOV</th>
+        <th>STL</th>
+        <th>BLk</th>
+        <th>PF</th>
+    	</tr>
+    	<tbody></tbody>
+    </table>`;
+}
+function change_table_Player(){
+  document.getElementById('table1').innerHTML =
+  `<table id="mytable3" border="1" cellspacing="19">
+  	<tr>
+  		<th>Player</th>
+  		<th>GP</th>
+  		<th>MIN</th>
+      <th>PTS</th>
+      <th>FGM</th>
+      <th>FGA</th>
+      <th>FG%</th>
+      <th>3PM</th>
+      <th>3PA</th>
+      <th>3p%</th>
+      <th>FTM</th>
+      <th>FTA</th>
+      <th>FT%</th>
+      <th>OREB</th>
+      <th>DREB</th>
+      <th>REB</th>
+      <th>AST</th>
+      <th>STL</th>
+      <th>BLK</th>
+      <th>TOV</th>
+  	</tr>
+  	<tbody></tbody>
+  </table>
+`;
+}
+function change_table_Scedule(){
+  document.getElementById('table1').innerHTML =
+  `<table id="mytable2" border="1" cellspacing="3">
+  	<tr>
+  		<th>Date</th>
+  		<th>Time</th>
+  		<th>Teams</th>
+      <th>Score</th>
+  	</tr>
+  	<tbody></tbody>
+  </table>
+`;
+}
+
+function change_table_MyPlayer(){
+  document.getElementById('table1').innerHTML =
+  `
+	<div style="font-size:16px">
+  <p>First Name<input id="first" type="text" name="first"></p>
+  <p>Last Name<input id="last" type="text" name="last"></p>
+  <button type="submit" onclick = "Add_Player(document.getElementById('first').value, document.getElementById('last').value);"> Add Player </button>
+  <button type="submit" onclick = "Delete_Player(document.getElementById('first').value, document.getElementById('last').value);"> Delete Player </button>
+	</div>
+  <table id="mytable4" border="1" cellspacing="23">
+  	<tr>
+      <th>player_first_name</th>
+      <th>player_last_name</th>
+      <th>team_name</th>
+      <th>GP</th>
+      <th>MINUTE</th>
+      <th>pts</th>
+      <th>fgm</th>
+      <th>fga</th>
+      <th>fgp</th>
+      <th>tpm</th>
+      <th>tpa</th>
+      <th>tpp</th>
+      <th>ftm</th>
+      <th>fta</th>
+      <th>ftp</th>
+      <th>oreb</th>
+      <th>dreb</th>
+      <th>reb</th>
+      <th>ast</th>
+      <th>stl</th>
+      <th>blk</th>
+      <th>tov</th>
+      <th>dd2</th>
+      <th>td3</th>
+  	</tr>
+  	<tbody></tbody>
+  </table>
+`;
+}
+
+</script>
+
+</head>
+<body>
+	<img class = "logo" src="/KakaoTalk_20181207_170736676.png" onclick="location.href = 'http://ec2-18-218-148-142.us-east-2.compute.amazonaws.com:3000';">
+
+	<div class="w3-bar w3-black">
+  <button class = "w3-bar-item w3-button tablink button1" onclick = "change_color(this); change_table_Team(); insert_Team();"> Team </button>
+  <!-- <button class = "w3-bar-item w3-button tablink button1"  onclick = "change_color(this); change_table_Player(); insert_Player();"> Player </button> -->
+  <button class = "w3-bar-item w3-button tablink button1"  onclick = "change_color(this); change_table_Player(); insert_Player2();"> Player </button>
+  <button class = "w3-bar-item w3-button tablink button1"  onclick = "change_color(this); change_table_Scedule(); insert_Scedule();"> Schedule </button>
+  <button class = "w3-bar-item w3-button tablink button1"  onclick = "change_color(this); Update_Table_MyPlayer();"> My Player </button>
+	</div>
+  <script>
+
+
+  function insert_Scedule() {
+  	$.ajax({
+  		url: "/seasonAPI",
+  		success: function( result ) {
+  			for (var i in result){
+  				var item = result[i];
+					var home = item.home_team_score;
+					var away = item.away_team_score;
+
+					var home_color, away_color, home_bold1, home_bold2, away_bold1, away_bold2;
+					if (item.home_team_score > item.away_team_score){
+						home_color = '#FF0000';
+						away_color = '#000000';
+						home_bold1 = '<STRONG>';
+						home_bold2 = '</STRONG>';
+						away_bold1 = '';
+						away_bold2 = '';
+					} else if (item.home_team_score < item.away_team_score){
+						away_color = '#FF0000';
+						home_color = '#000000';
+						away_bold1 = '<STRONG>';
+						away_bold2 = '</STRONG>';
+						home_bold1 = '';
+						home_bold2 = '';
+					} else {
+						away_color = '#000000';
+						home_color = '#000000';
+						away_bold1 = '';
+						away_bold2 = '';
+						home_bold1 = '';
+						home_bold2 = '';
+						home = '';
+						away = '';
+					}
+
+          console.log(item);
+  				$('#mytable2 > tbody:last').append('<tr>' +
+  					'<td rowspan="2">' + item.game_date.split('T')[0] + '</td>' +
+  					'<td rowspan="2">' + item.game_date.split('T')[1].slice(0,5) + '</td>' +
+            '<td>' + item.home_team_name + '</td>' +
+  					'<td> <font color=' + home_color + '>' + home_bold1 + home + home_bold2 + '</td></tr>' +
+            '<tr>' +
+              '<td>' + item.away_team_name + '</td>' +
+    					'<td> <font color=' + away_color + '>' + away_bold1 + away + away_bold2 + '</td></tr>');
+  			}
+  		}
+  	});
+  };
+
+
+
+  function insert_Team() {
+  	$.ajax({
+  		url: "/teamAPI",
+  		success: function( result ) {
+  			for (var i in result){
+  				var item = result[i];
+          console.log(item);
+  				$('#mytable > tbody:last').append('<tr>' +
+  					'<td>' + item.team_name + '</td>' +
+  					'<td>' + item.GP + '</td>' +
+            '<td>' + item.win + '</td>' +
+            '<td>' + item.loss + '</td>' +
+            '<td>' + item.winp + '</td>' +
+            '<td>' + item.min + '</td>' +
+            '<td>' + item.pts + '</td>' +
+            '<td>' + item.fgp + '</td>' +
+            '<td>' + item.tpp + '</td>' +
+            '<td>' + item.ftp + '</td>' +
+            '<td>' + item.oreb + '</td>' +
+            '<td>' + item.dreb + '</td>' +
+            '<td>' + item.reb + '</td>' +
+            '<td>' + item.ast + '</td>' +
+            '<td>' + item.tov + '</td>' +
+            '<td>' + item.stl + '</td>' +
+            '<td>' + item.blk + '</td>' +
+  					'<td>' + item.pf + '</td></tr>');
+  			}
+  		}
+  	});
+  };
+
+  function insert_Player2() {
+        $.ajax({
+            url:"/playerAverage",
+			success: function(result){
+                for (var i in result){
+                    var item = result[i];
+                    $('#mytable3 > tbody:last').append('<tr style="color:red">' +
+                        '<td>' + "League Average" + '</td>' +
+                        '<td>' + item.GP + '</td>' +
+                        '<td>' + item.MINUTE + '</td>' +
+                        '<td>' + item.pts + '</td>' +
+                        '<td>' + item.fgm + '</td>' +
+                        '<td>' + item.fga + '</td>' +
+                        '<td>' + item.fgp + '</td>' +
+                        '<td>' + item.tpm + '</td>' +
+                        '<td>' + item.tpa + '</td>' +
+                        '<td>' + item.tpp + '</td>' +
+                        '<td>' + item.ftm + '</td>' +
+                        '<td>' + item.fta + '</td>' +
+                        '<td>' + item.ftp + '</td>' +
+                        '<td>' + item.oreb + '</td>' +
+                        '<td>' + item.dreb + '</td>' +
+                        '<td>' + item.reb + '</td>' +
+                        '<td>' + item.ast + '</td>' +
+                        '<td>' + item.st1 + '</td>' +
+                        '<td>' + item.blk + '</td>' +
+                        '<td>' + item.tov + '</td></tr>');
+                }
+                $.ajax({
+                    url: "/playerAPI",
+                    success: function( result ) {
+                        for (var i in result){
+                            var item = result[i];
+                            console.log(item);
+                            $('#mytable3 > tbody:last').append('<tr>' +
+                                '<td>' + item.player_first_name+ " " +item.player_last_name + '</td>' +
+                                '<td>' + item.GP + '</td>' +
+                                '<td>' + item.MINUTE + '</td>' +
+                                '<td>' + item.pts + '</td>' +
+                                '<td>' + item.fgm + '</td>' +
+                                '<td>' + item.fga + '</td>' +
+                                '<td>' + item.fgp + '</td>' +
+                                '<td>' + item.tpm + '</td>' +
+                                '<td>' + item.tpa + '</td>' +
+                                '<td>' + item.tpp + '</td>' +
+                                '<td>' + item.ftm + '</td>' +
+                                '<td>' + item.fta + '</td>' +
+                                '<td>' + item.ftp + '</td>' +
+                                '<td>' + item.oreb + '</td>' +
+                                '<td>' + item.dreb + '</td>' +
+                                '<td>' + item.reb + '</td>' +
+                                '<td>' + item.ast + '</td>' +
+                                '<td>' + item.stl + '</td>' +
+                                '<td>' + item.blk + '</td>' +
+                                  '<td>' + item.tov + '</td></tr>');
+                    }
+                }
+            });         
+        }
+    });
+  };
+
+  function insert_Player() {
+		$.ajax({
+
+			url:"/playerAverage",
+			success: function(result){
+				for (var i in result){
+  				var item = result[i];
+
+  				$('#mytable3 > tbody:last').append('<tr style="color:red">' +
+  					'<td>' + "League Average" + '</td>' +
+  					'<td>' + item.GP + '</td>' +
+            '<td>' + item.MINUTE + '</td>' +
+            '<td>' + item.pts + '</td>' +
+            '<td>' + item.fgm + '</td>' +
+            '<td>' + item.fga + '</td>' +
+            '<td>' + item.fgp + '</td>' +
+            '<td>' + item.tpm + '</td>' +
+            '<td>' + item.tpa + '</td>' +
+            '<td>' + item.tpp + '</td>' +
+            '<td>' + item.ftm + '</td>' +
+            '<td>' + item.fta + '</td>' +
+            '<td>' + item.ftp + '</td>' +
+            '<td>' + item.oreb + '</td>' +
+            '<td>' + item.dreb + '</td>' +
+            '<td>' + item.reb + '</td>' +
+            '<td>' + item.ast + '</td>' +
+            '<td>' + item.st1 + '</td>' +
+            '<td>' + item.blk + '</td>' +
+  					'<td>' + item.tov + '</td></tr>');
+  			}
+			}
+		})
+  	$.ajax({
+  		url: "/playerAPI",
+  		success: function( result ) {
+  			for (var i in result){
+  				var item = result[i];
+          console.log(item);
+  				$('#mytable3 > tbody:last').append('<tr>' +
+  					'<td>' + item.player_first_name+ " " +item.player_last_name + '</td>' +
+  					'<td>' + item.GP + '</td>' +
+            '<td>' + item.MINUTE + '</td>' +
+            '<td>' + item.pts + '</td>' +
+            '<td>' + item.fgm + '</td>' +
+            '<td>' + item.fga + '</td>' +
+            '<td>' + item.fgp + '</td>' +
+            '<td>' + item.tpm + '</td>' +
+            '<td>' + item.tpa + '</td>' +
+            '<td>' + item.tpp + '</td>' +
+            '<td>' + item.ftm + '</td>' +
+            '<td>' + item.fta + '</td>' +
+            '<td>' + item.ftp + '</td>' +
+            '<td>' + item.oreb + '</td>' +
+            '<td>' + item.dreb + '</td>' +
+            '<td>' + item.reb + '</td>' +
+            '<td>' + item.ast + '</td>' +
+            '<td>' + item.stl + '</td>' +
+            '<td>' + item.blk + '</td>' +
+  					'<td>' + item.tov + '</td></tr>');
+  			}
+  		}
+  	});
+  };
+  </script>
+  <div id='table1' class='table1'>
+		<div class="vvv">
+	<video class="video-loop" autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline"
+	poster="https://nbadsdmt.akamaized.net/media/nba/nba/thumbs/dl/60416_pc.jpg"
+	src="https://neulionms-a.akamaihd.net/nba/player/promo/nba_footage_promo.mp4"
+	 width="100%" height="auto">
+	</video>
+
+	</div>
+	<div class="centered">
+		TEAM NBA
+	</div>
+  </div>
+</body>
+</html>
